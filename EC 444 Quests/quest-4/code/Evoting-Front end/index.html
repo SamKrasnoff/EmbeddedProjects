@@ -1,0 +1,177 @@
+<!-- client side Yanni Pang Sam Krasnoff Abd el Aziz Hussein 11/13/20-->
+
+
+<!DOCTYPE html>
+<html>
+
+<!-- HTML HEAD -->
+<head>
+    <title>Election Data</title>
+    <!-- Source for Socket.io - this one is local -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+    <style>
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+
+        body {
+            font-family: Helvetica;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        table {
+            width: 300px;
+            margin: 0px 50px 0px 50px ;
+            text-align: center;
+            padding-bottom: 50px;
+        }
+
+        .left {
+            display: inline-block;
+            text-align: left;
+        }
+
+        .count {
+            margin: 30px;
+        }
+        #tables {
+            display: flex;
+            justify-content: center;
+        }
+
+    </style>
+</head>
+
+<body>
+<!-- HTML layout -->
+<div class="center">
+    <h1>Election Data</h1> <br>
+</div>
+<div class="center">
+    <button onclick="resetDatabase()">Reset Vote Count</button>
+</div>
+<div style=" padding-left: 20%; padding-right: 20%;">
+    <canvas id="myChart" width= "100"; height="35"></canvas>
+    <br>
+</div>
+
+<div class="center" style="display:flex; justify-content: center;">
+    <h2 class="count" id="fob1">Fob 1: n/a</h2>
+    <h2 class="count" id="fob2">Fob 2: n/a</h2>
+    <h2 class="count" id="fob3">Fob 3: n/a</h2>
+
+</div>
+
+<div id="tables">
+</div>
+
+
+<!-- Script to handle socket and also to update chart datapoints -->
+<script>
+
+    var socket = io();
+    function resetDatabase() {
+        socket.emit('reset', "1");
+        console.log("done");
+        setTimeout(function(){},500);
+        location.reload();
+    }
+
+    socket.on('message', function (msg) {
+        // Parse received message from server
+        addToTable(msg[Object.keys(msg)][0].fobID, msg);
+        addToCount(msg[Object.keys(msg)][0]);
+        addData(myChart, 1, msg[Object.keys(msg)][0].fob1Total);
+        addData(myChart, 2, msg[Object.keys(msg)][0].fob2Total);
+        addData(myChart, 3, msg[Object.keys(msg)][0].fob3Total);
+
+        // console.log(msg);
+
+    });
+
+
+    function addToCount(leaderID) {
+
+        document.getElementById("fob1").innerText = 'Fob 1: ' + leaderID.fob1Total;
+        document.getElementById("fob2").innerText = 'Fob 2: ' + leaderID.fob2Total;
+        document.getElementById("fob3").innerText = 'Fob 3: ' + leaderID.fob3Total;
+
+        // console.log("Adding to count");
+    }
+
+    function addToTable(num, msg) {
+        let table = document.getElementById("id-" + num);
+        // console.log(table);
+        if (table === null) {
+            let div = document.createElement('div');
+            div.setAttribute("id", "div_" + num);
+            div.setAttribute('class', "center");
+            let div2 = document.createElement('div');
+            div2.setAttribute('class', "left");
+            let newTable = document.createElement('table');
+            newTable.setAttribute('class', "center");
+            newTable.setAttribute('id', "id-" + num);
+            div2.innerHTML = "<h2> ID: " + num + "</h2>";
+            newTable.insertRow().innerHTML = "<th>Fob ID</th> <th>Time (s)</th> <th>Voted for</th>";
+            div2.appendChild(newTable);
+            div.appendChild(div2);
+            let tablediv = document.getElementById("tables");
+            tablediv.appendChild(div)
+            table = document.getElementById("id-" + num);
+        }
+        let tr = document.createElement('tr');
+        tr.innerHTML = "<td>" + msg[Object.keys(msg)][0].fobID + "</td>" + "<td>" + msg[Object.keys(msg)][0].time + "</td>" + "<td>" + msg[Object.keys(msg)][0].vote + "</td>";
+        table.appendChild(tr);
+
+        var main = document.getElementById("tables");
+
+        [].map.call(main.children, Object).sort(function (a, b) {
+            return +a.id.match(/\d+/) - +b.id.match(/\d+/);
+        }).forEach(function (elem) {
+            main.appendChild(elem);
+        });
+    }
+
+    let ctx = document.getElementById("myChart");
+    let myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: [
+                "Fob 1",
+                "Fob 2",
+                "Fob 3"],
+            datasets: [{
+                label: 'Vote Count',
+                data: [0,0,0],
+                backgroundColor: [
+                    'rgb(255,87,87)',
+                    'rgb(243,162,0)',
+                    'rgb(54,142,239)'
+                ]
+            }]
+        }
+    });
+
+    function addData(chart, fobid, data) {
+        chart.data.datasets[0].data[fobid-1] = data;
+        chart.update();
+    }
+    function removeData(chart) {
+        chart.data.labels.shift();
+        chart.data.datasets.forEach((dataset) => {
+            dataset.data.shift();
+        });
+        chart.update();
+    }
+</script>
+
+</body>
+
+</html>

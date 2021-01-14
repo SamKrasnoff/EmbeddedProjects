@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+/Users/yannipang/esp/thermistor/build/CMakeFiles/bootloader
+/Users/yannipang/esp/thermistor/build/CMakeFiles/bootloader.rule
+/Users/yannipang/esp/thermistor/build/CMakeFiles/bootloader-complete.rule
+/Users/yannipang/esp/thermistor/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+/Users/yannipang/esp/thermistor/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+/Users/yannipang/esp/thermistor/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+/Users/yannipang/esp/thermistor/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
+/Users/yannipang/esp/thermistor/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+/Users/yannipang/esp/thermistor/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+/Users/yannipang/esp/thermistor/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule

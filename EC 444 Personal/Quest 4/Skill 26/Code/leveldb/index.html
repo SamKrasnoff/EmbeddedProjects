@@ -1,0 +1,92 @@
+<!-- client side -->
+
+<!DOCTYPE html>
+<html>
+
+<!-- HTML HEAD -->
+<head>
+    <title>Smoke Data</title>
+    <!-- Source for Socket.io - this one is local -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <style>
+        canvas{
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+        body{
+            font-family: Helvetica;
+        }
+        .center{
+            text-align: center;
+        }
+        table{
+            width: 500px;
+            text-align: center;
+            padding-bottom: 50px;
+        }
+        .left {
+            display: inline-block;
+            text-align: left;
+        }
+
+    </style>
+</head>
+
+<body>
+<!-- HTML layout -->
+<div class="center">
+<h1>Smoke Data</h1> <br>
+</div>
+
+
+<!-- Script to handle socket and also to update chart datapoints -->
+<script>
+    var socket = io();
+    socket.on('message', function(msg){
+
+        // Parse received message from server
+        addToTable(msg[Object.keys(msg)][0].id, msg);
+
+    });
+
+    function addToTable(num, msg) {
+        let table = document.getElementById("id-" + num);
+        console.log(table);
+        if(table === null){
+            let div = document.createElement('div');
+            div.setAttribute("id", "div_"+num);
+            div.setAttribute('class', "center");
+            let div2 = document.createElement('div');
+            div2.setAttribute('class', "left");
+            let newTable = document.createElement('table');
+            newTable.setAttribute('class', "center");
+            newTable.setAttribute('id', "id-"+num);
+            div2.innerHTML = "<h2> ID: " + num + "</h2>";
+            newTable.insertRow().innerHTML = "<th>Sensor ID</th> <th>Time (s)</th> <th>Smoke</th> <th>Temp (°C)</th>";
+            div2.appendChild(newTable);
+            div.appendChild(div2);
+            document.body.appendChild(div)
+            table = document.getElementById("id-" + num);
+        }
+        let tr = document.createElement('tr');
+        tr.innerHTML =  "<td>" + msg[Object.keys(msg)][0].id + "</td>" + "<td>" + msg[Object.keys(msg)][0].time + "</td>" + "<td>" + msg[Object.keys(msg)][0].smoke + "</td>" + "<td>" + msg[Object.keys(msg)][0].temp + "</td>";
+        table.appendChild(tr);
+
+        var main = document.body;
+
+        [].map.call( main.children, Object ).sort( function ( a, b ) {
+            return +a.id.match( /\d+/ ) - +b.id.match( /\d+/ );
+        }).forEach( function ( elem ) {
+            main.appendChild( elem );
+        });
+    }
+
+
+
+</script>
+
+</body>
+
+</html>

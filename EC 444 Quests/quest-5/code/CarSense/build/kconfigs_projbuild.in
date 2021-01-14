@@ -1,0 +1,6 @@
+source "C:/Users/samkr/Desktop/esp-idf/components/app_update/Kconfig.projbuild"
+source "C:/Users/samkr/Desktop/esp-idf/components/bootloader/Kconfig.projbuild"
+source "C:/Users/samkr/Desktop/esp-idf/components/esptool_py/Kconfig.projbuild"
+source "C:/Users/samkr/Desktop/esp-idf/components/partition_table/Kconfig.projbuild"
+source "C:/Users/samkr/Desktop/esp-idf/examples/get-started/CarSense/main/Kconfig.projbuild"
+source "C:/Users/samkr/Desktop/esp-idf/examples/common_components/protocol_examples_common/Kconfig.projbuild"

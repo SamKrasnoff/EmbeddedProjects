@@ -1,0 +1,149 @@
+<!-- Yanni Pang, Sam Kranoff, Abd el Aziz Husssein | 10-23-2020 -->
+
+<!doctype html>
+<html>
+
+<!-- HTML HEAD -->
+<head>
+    <title>Hurricane Box</title>
+    <!-- Source for Socket.io - this one is local -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+
+
+        /* Copyright (C) 2007 Richard Atterer, richardÂ©atterer.net
+           This program is free software; you can redistribute it and/or modify it
+           under the terms of the GNU General Public License, version 2. See the file
+           COPYING for details. */
+
+        var imageNr = 0; // Serial number of current image
+        var finished = new Array(); // References to img objects which have finished downloading
+        var paused = false;
+
+        function createImageLayer() {
+            var img = new Image();
+            img.style.position = "absolute";
+            img.style.width = "40%";
+            img.style.height = "auto";
+            img.style.zIndex = -1;
+            img.onload = imageOnload;
+            img.onclick = imageOnclick;
+            img.src = "https://cam.yanni.dev/?action=snapshot&n=" + (++imageNr);
+            var webcam = document.getElementById("webcam");
+            webcam.insertBefore(img, webcam.firstChild);
+        }
+
+        // Two layers are always present (except at the very beginning), to avoid flicker
+        function imageOnload() {
+            this.style.zIndex = imageNr; // Image finished, bring to front!
+            while (1 < finished.length) {
+                var del = finished.shift(); // Delete old image(s) from document
+                del.parentNode.removeChild(del);
+            }
+            finished.push(this);
+            if (!paused) createImageLayer();
+        }
+
+        function imageOnclick() { // Clicking on the image will pause the stream
+            paused = !paused;
+            if (!paused) createImageLayer();
+        }
+
+
+    </script>
+
+    <style>
+        html {
+            height: 100%;
+            background-color: #0093E9;
+            background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
+            background-repeat: no-repeat;
+            background-size: auto;
+        }
+        h1, h2, p {
+            font-family: Helvetica, serif;
+            text-align: center;
+            color: #142a54;
+        }
+        p {
+            font-size: 30px;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+        button {
+            border: 0;
+            padding: 10px 20px;
+            border-radius: 20px;
+            background-color: #d9be43;
+            color: #142a54;
+            font-size: 20px;
+            font-family: Helvetica;
+        }
+        button:active {
+            background-color: #8f7436;
+        }
+    </style>
+
+</head>
+
+<body onload="createImageLayer();">
+<!-- HTML layout -->
+<h1>Hurricane Box</h1> <br>
+
+<div style="display: flex; flex-direction: column; justify-content: center;">
+    <div>
+        <h2>Accelerometer</h2>
+        <div style="display: flex; align-items: center; justify-content: center;">
+        <p id = "x">x: </p>
+        <p id = "y">y: </p>
+        <p id = "z">z: </p>
+        </div>
+    </div>
+
+    <div>
+    <h2>Thermistor</h2>
+    <p id="thermistor">°C</p>
+    </div>
+
+    <div>
+        <h2>LED</h2>
+        <p id = led>Status: </p>
+        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <button onclick="toggle()">Toggle LED</button>
+        </div>
+    </div>
+    <div>
+        <h2>Camera</h2>
+        <div style="display: flex; justify-content: center;" id = "webcam"></div>
+
+    </div>
+</div>
+<!-- Script to handle socket -->
+<script>
+    var socket = io();
+    var togg;
+    function toggle(){
+        socket.emit('toggle', "1");
+    }
+    socket.on('message', function(msg){
+        var obj = JSON.parse(msg);
+        togg = obj.state;
+        console.log(togg);
+
+        document.getElementById("x").innerHTML = "x: " + obj.x + "°";
+        document.getElementById("y").innerHTML = " y: " + obj.y + "°";
+        document.getElementById("z").innerHTML = " z: " + obj.z + "°";
+        document.getElementById("thermistor").innerHTML = obj.temp + "°C";
+            if(obj.state){
+                document.getElementById("led").innerHTML =  "Status: On";
+            } else {
+                document.getElementById("led").innerHTML =  "Status: Off";
+            }
+
+    });
+</script>
+
+</body>
+
+</html>
+

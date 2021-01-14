@@ -1,0 +1,161 @@
+<!-- Yanni Pang, Sam Krasnoff, Abdelaziz Hussein -->
+<!DOCTYPE html>
+<html>
+<head><title>Sensor</title></head>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<body>
+
+<div style=" padding-left: 20%; padding-right: 20%;">
+    <canvas id="myChart" width= height="300"></canvas>
+    <br>
+    <canvas id="myChart2" width= height="300"></canvas>
+    <br>
+    <canvas id="myChart3" width= height="300"></canvas>
+</div>
+<script>
+    var num = 1;
+    var num2 = 1;
+    var remove = false;
+
+setInterval(function () {
+    num = 1;
+        $.ajax({url: "/data", success: function(result){
+                var contents ="";
+                jQuery.each(result, function(i, val) {
+                    addData(myChart, num++, val[0]);
+                   addData(myChart2, num++, val[1]/100.0);
+                    addData(myChart3, num++, val[2]/100.0);
+                    if(num%40 == 0){
+                        remove = true;
+                    }
+                    if(remove){
+                        removeData(myChart);
+                        removeData(myChart2);
+                        removeData(myChart3);
+
+                    }
+                });
+
+            }});
+    },2000);
+    let ctx = document.getElementById("myChart").getContext('2d');
+    let myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Temperature (°C)',
+                data: [],
+                fill: false,
+                radius: 0,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 2,
+                borderJoinStyle: 'round'
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            },
+            animation: {
+                duration: 10
+
+            }
+        }
+    });
+    let ctx2 = document.getElementById("myChart2").getContext('2d');
+    let myChart2 = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'IR Rangefinder (m)',
+                data: [],
+                fill: false,
+                radius: 0,
+                backgroundColor: [
+                'rgba(0, 255, 150, 1)'
+            ],
+            borderColor: [
+                'rgba(0, 255, 150, 1)'
+            ],
+                borderWidth: 2,
+                borderJoinStyle: 'round'
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            },
+            animation: {
+                duration: 10
+
+            }
+        }
+    });
+    let ctx3 = document.getElementById("myChart3").getContext('2d');
+    let myChart3 = new Chart(ctx3, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Ultrasonic Sensor (m)',
+                data: [],
+                fill: false,
+                radius: 0,
+                backgroundColor: [
+        'rgba(255, 0, 0, 1)'
+    ],
+        borderColor: [
+        'rgba(255, 0, 0, 1)'
+    ],
+                borderWidth: 2,
+                borderJoinStyle: 'round'
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            },
+            animation: {
+                duration: 10
+
+            }
+        }
+    });
+
+    function addData(chart, label, data) {
+        console.log(console.log(chart.data.datasets[0].data));
+        chart.data.labels.push(label);
+        chart.data.datasets[0].data.push(data);
+        chart.update();
+    }
+    function removeData(chart) {
+        chart.data.labels.shift();
+        chart.data.datasets.forEach((dataset) => {
+            dataset.data.shift();
+        });
+        chart.update();
+    }
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+    "project_name":       "bootloader",
+    "project_path":       "/Users/yannipang/esp/esp-idf/components/bootloader/subproject",
+    "build_dir":          "/Users/yannipang/esp/thermistor/build/bootloader",
+    "config_file":        "/Users/yannipang/esp/thermistor/sdkconfig",
+    "config_defaults":    "",
+    "app_elf":            "bootloader.elf",
+    "app_bin":            "bootloader.bin",
+    "git_revision":       "v4.1",
+    "target":             "esp32",
+    "phy_data_partition": "",
+    "monitor_baud" :      "115200",
+    "monitor_toolprefix": "xtensa-esp32-elf-",
+    "config_environment" : {
+        "COMPONENT_KCONFIGS" : "/Users/yannipang/esp/esp-idf/components/efuse/Kconfig;/Users/yannipang/esp/esp-idf/components/esp32/Kconfig;/Users/yannipang/esp/esp-idf/components/esp_common/Kconfig;/Users/yannipang/esp/esp-idf/components/log/Kconfig;/Users/yannipang/esp/esp-idf/components/spi_flash/Kconfig",
+        "COMPONENT_KCONFIGS_PROJBUILD" : "/Users/yannipang/esp/esp-idf/components/bootloader/Kconfig.projbuild;/Users/yannipang/esp/esp-idf/components/esptool_py/Kconfig.projbuild;/Users/yannipang/esp/esp-idf/components/partition_table/Kconfig.projbuild"
+    },
+    "build_components" : [ "bootloader", "bootloader_support", "efuse", "esp32", "esp_common", "esp_rom", "esptool_py", "log", "main", "micro-ecc", "partition_table", "soc", "spi_flash", "xtensa", "" ],
+    "build_component_paths" : [ "/Users/yannipang/esp/esp-idf/components/bootloader", "/Users/yannipang/esp/esp-idf/components/bootloader_support", "/Users/yannipang/esp/esp-idf/components/efuse", "/Users/yannipang/esp/esp-idf/components/esp32", "/Users/yannipang/esp/esp-idf/components/esp_common", "/Users/yannipang/esp/esp-idf/components/esp_rom", "/Users/yannipang/esp/esp-idf/components/esptool_py", "/Users/yannipang/esp/esp-idf/components/log", "/Users/yannipang/esp/esp-idf/components/bootloader/subproject/main", "/Users/yannipang/esp/esp-idf/components/bootloader/subproject/components/micro-ecc", "/Users/yannipang/esp/esp-idf/components/partition_table", "/Users/yannipang/esp/esp-idf/components/soc", "/Users/yannipang/esp/esp-idf/components/spi_flash", "/Users/yannipang/esp/esp-idf/components/xtensa", "" ]
+}
